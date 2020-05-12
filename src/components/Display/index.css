@@ -1,0 +1,8 @@
+.calculator-display {
+  margin: auto;
+  overflow: scroll;
+  text-align: right;
+  border: 1px solid black;
+  width: 140px;
+  padding: 10px 10px;
+}

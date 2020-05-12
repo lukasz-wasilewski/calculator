@@ -1,0 +1,27 @@
+.calculator-button {
+  height: 30px;
+}
+
+.calculator-button:focus {
+  outline: none;
+}
+
+.calculator-button:active {
+  border-style: none;
+}
+
+.calculator-button.size--md {
+  width: 40px;
+}
+
+.calculator-button.size--xl {
+  width: 80px;
+}
+
+.calculator-button.default {
+  background-color: silver;
+}
+
+.calculator-button.primary {
+  background-color: orange;
+}
