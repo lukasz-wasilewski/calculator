@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { calc } from './service';
 
+const NAN_RESULT = 'NaN';
+
 function useCalculatorState() {
   const [a, setA] = useState('0');
   const [b, setB] = useState('0');
   const [operationCalc, setOperation] = useState('');
+  const [error, setError] = useState(null);
 
   const getVariable = () => {
     if (operationCalc !== '') {
@@ -24,12 +27,15 @@ function useCalculatorState() {
 
   const calculateOperation = (operation) => {
     return async () => {
+      const oldValue = getVariable();
+      if (error === NAN_RESULT) {
+        setError(null);
+      }
+
       if (!isNaN(Number.parseFloat(operation))) {
-        const oldValue = getVariable();
         const value = oldValue === '0' ? operation : oldValue + operation;
         setVariable(value);
       } else {
-        const val = getVariable();
         switch (operation) {
           case 'C':
             if (b !== '0') {
@@ -41,19 +47,21 @@ function useCalculatorState() {
             }
             break;
           case '-/+':
-            if (val !== '0') {
-              if (val.startsWith('-')) {
-                setVariable(val.replace('-', ''));
+            if (oldValue !== '0') {
+              if (oldValue.startsWith('-')) {
+                setVariable(oldValue.replace('-', ''));
               } else {
-                setVariable('-' + val);
+                setVariable('-' + oldValue);
               }
             }
             break;
           case '%':
-            setVariable((Number.parseFloat(val) / 100).toString());
+            setVariable((Number.parseFloat(oldValue) / 100).toString());
             break;
           case '.':
-            if (!val.includes(operation)) setVariable(val + operation);
+            if (!oldValue.includes(operation)) {
+              setVariable(oldValue + operation);
+            }
             break;
           case '=':
             if (operationCalc !== '') {
@@ -62,7 +70,12 @@ function useCalculatorState() {
                 Number.parseFloat(b),
                 operationCalc
               );
-              setA(result.toString());
+              if (result !== null && !isNaN(result)) {
+                setA(result.toString());
+              } else {
+                setA('0');
+                setError(NAN_RESULT);
+              }
               setOperation('');
               setB('0');
             }
@@ -75,7 +88,7 @@ function useCalculatorState() {
       }
     };
   };
-  return [a, b, operationCalc, calculateOperation];
+  return [a, b, operationCalc, calculateOperation, error];
 }
 
 export default useCalculatorState;

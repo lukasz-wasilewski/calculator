@@ -4,13 +4,13 @@ import Display from '../../components/Display';
 import useCalculatorState from './calculatorHook';
 
 function Calculator() {
-	const [a, b, operationCalc, calculateOperation] = useCalculatorState();
-	
-	const onButtonClick = calculateOperation;
+  const [a, b, operationCalc, calculateOperation, error] = useCalculatorState();
+
+  const onButtonClick = calculateOperation;
   return (
     <>
       <div>
-        <Display a={a} b={b} operation={operationCalc} />
+        <Display a={a} b={b} operation={operationCalc} error={error} />
       </div>
       <div>
         <Button onClick={onButtonClick} value="C" />
